@@ -13,8 +13,11 @@ struct segtree{
     }
 
     void set(int i, int v, int x, int lx, int rx){
+        // lx is the left bound of the current node and rx is the right bound of the current node
+        cout << "i = " << i << " v = " << v << " x = " << x << " lx = " << lx << " rx = " << rx << endl;
         if(rx - lx == 1){ // if we are at the leaf just assign the val
             sums[x] = v;
+            cout << "sums[" << x << "] = " << v << endl;
             return;
         }
         int m = (lx + rx) / 2;
@@ -25,6 +28,7 @@ struct segtree{
         }
         // calculate the sum of the children
         sums[x] = sums[2*x+1] + sums[2*x+2];
+        cout << "sums[" << x << "] = " << sums[x] << " this the parent of " << sums[2*x+1] << " and " << sums[2*x+2] << endl;
     }
     
 
@@ -60,6 +64,9 @@ int main(){
         int v; cin >> v;
         st.set(i, v);
     }
+    for(int i = 0; i < 2*st.size; i++){
+        cout << st.sums[i] << " ";
+    }
 
     while(m--){
         int op; cin >> op;
@@ -71,6 +78,8 @@ int main(){
             cout << st.fn(l, r) << endl;
         }
     }
+    cout << endl;
+
 
     return 0;
 }
