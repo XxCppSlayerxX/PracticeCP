@@ -2,7 +2,7 @@
 using namespace std;
 
 struct node{
-    int m, c;
+    long long c;
 };
 
 struct segtree{
@@ -10,16 +10,14 @@ struct segtree{
     int size;
     vector<node> values;
 
-    node NEUTRAL = {INT_MAX, 0};
+    node NEUTRAL = {0};
 
     node merge(node a, node b){
-        if(a.m < b.m) return a;
-        if(a.m > b.m) return b;
-        return {a.m, a.c + b.c};
+        return {a.c + b.c};
     }
 
     node single(int v){
-        return {v, 1};
+        return {v};
     }
 
     void init(int n){
@@ -47,18 +45,18 @@ struct segtree{
         set(i, v, 0, 0, size);
     }
 
-    node fn(int l, int r, int x, int lx, int rx){
-        if(lx >= r || l >= rx) return NEUTRAL; // return neutral element
-        if(lx >= l && rx <= r) return values[x]; // if the range is inside the query range 
-        
+    node fn(int k, int x, int lx, int rx){
+        if(rx - lx == 1) return {lx};
         int m = (lx + rx) / 2;
-        node s1 = fn(l, r, 2*x+1, lx, m);
-        node s2 = fn(l, r, 2*x+2, m, rx);
-        return merge(s1, s2);
+        if(values[2*x+1].c > k){
+            return fn(k, 2*x+1, lx, m); // go to the left child and no need to subtract the value
+        }else{
+            return fn(k - values[2*x+1].c, 2*x+2, m, rx);
+        }
     }
 
-    node fn(int l, int r){
-        return fn(l, r, 0, 0, size);
+    node fn(int k){
+        return fn(k, 0, 0, size);
     }
 
     void build(vector<int> &a, int x, int lx, int rx){
@@ -92,20 +90,20 @@ int main(){
         cin >> a[i];
     }
     st.build(a);
-
     while(m--){
-        int op; cin >> op;
-        if(op == 1){
-            int i, v; cin >> i >> v;
-            st.set(i, v);
-        }else{
-            int l, r; cin >> l >> r;
-            node ans = st.fn(l, r);
-            cout << ans.m << " " << ans.c << endl;
+            int op; cin >> op;
+            if(op == 1){
+                int i; cin >> i;
+                a[i] = 1 - a[i];
+                st.set(i, a[i]);
+            }else{
+                int k; cin >> k;
+                cout << st.fn(k).c << endl;
+            }
+            
         }
-    }
     cout << endl;
-
 
     return 0;
 }
+ 

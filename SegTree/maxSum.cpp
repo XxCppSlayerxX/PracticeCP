@@ -2,7 +2,7 @@
 using namespace std;
 
 struct node{
-    int m, c;
+    long long seg, pref, suf, sum;
 };
 
 struct segtree{
@@ -10,16 +10,20 @@ struct segtree{
     int size;
     vector<node> values;
 
-    node NEUTRAL = {INT_MAX, 0};
+    node NEUTRAL = {0, 0, 0, 0};
 
     node merge(node a, node b){
-        if(a.m < b.m) return a;
-        if(a.m > b.m) return b;
-        return {a.m, a.c + b.c};
+        return {
+            max({a.seg, b.seg, a.suf + b.pref}),
+            max(a.pref, a.sum + b.pref),
+            max(b.suf, b.sum + a.suf),
+            a.sum + b.sum
+        };
     }
 
     node single(int v){
-        return {v, 1};
+        if(v > 0) return {v, v, v, v};
+        return {0, 0, 0, v};
     }
 
     void init(int n){
@@ -92,20 +96,14 @@ int main(){
         cin >> a[i];
     }
     st.build(a);
-
+    cout << st.fn(2, 3).seg << endl;
     while(m--){
-        int op; cin >> op;
-        if(op == 1){
             int i, v; cin >> i >> v;
             st.set(i, v);
-        }else{
-            int l, r; cin >> l >> r;
-            node ans = st.fn(l, r);
-            cout << ans.m << " " << ans.c << endl;
+            cout << st.fn(0, n).seg << endl;
         }
-    }
     cout << endl;
-
 
     return 0;
 }
+ 
