@@ -42,6 +42,7 @@ int main() {
     for(int i = 0; i < n; ++i) {
         b[i] = a[i] / G;
     }
+    
     map<ll, int> prime_count;
     for(int i = 0; i < n; ++i) {
         ll num = b[i];
