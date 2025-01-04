@@ -1,11 +1,48 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-int main(){
-    int k, n; cin >> k >> n;
-    vector<char> toilets(n + 2, '-');
+int main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
 
-    for(int i = 1; i < n + 1; ++i)
+    float k, n;
+    cin >> k >> n;
+
+    if (!(ceil(n / 3) <= k && ceil(n / 2) >= k))
+    {
+        cout << '*' << endl;
+        return 0;
+    }
+
+    bool equis = true;
+    while (n > 0 && k > 0){
+        while (n > 2 && k > 0 && !((ceil((n - 1) / 3) <= (k - 1) && ceil((n - 1) / 2) >= (k - 1)))){
+            cout << "-X-";
+            n -= 3;
+            k--;
+            equis = true;
+        }
+        if(n <= 0){
+            break;
+        }
+        if (equis)
+            {
+                cout << "X";
+                equis = false;
+                k--;
+            }
+            else
+            {
+                cout << "-";
+                equis = true;
+            }
+        n--;
+    }
+    if(n){
+        cout << "-";
+    }
+    cout << endl;
 
     return 0;
 }
